@@ -1,0 +1,14 @@
+{% extends 'index.html' %}
+
+{% block title %} {{meal_name}} {% endblock %}
+
+{% block content %}
+    {% if meal %}
+        <p><b>Meal: </b>{{meal.name}}</p>
+        <p><b>Description: </b>{{meal.description}}</p>
+        <p><b>Price: </b>{{meal.price}} EUR</p>
+        <p><b>Size: </b>{{meal.size}} g.</p>
+    {% else %}
+        Empty meal :(
+    {% endif %}
+{% endblock %}
