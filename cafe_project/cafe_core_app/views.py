@@ -18,7 +18,8 @@ def meal_category(request, meal_category):
 def meal(request, meal_id):
     meal = Meal.objects.get(id=meal_id)
     MealClick.objects.create(meal=meal)
-    return render(request, 'cafe_core_app/meal.html', {'meal': meal})
+    meal_score = MealClick.objects.values('meal_id').annotate(score=Count('meal_id')).filter(meal_id=meal_id)[:1]
+    return render(request, 'cafe_core_app/meal.html', {'meal': meal, 'meal_score': list(meal_score)[0]["score"]})
 
 
 def meal_top(request):
