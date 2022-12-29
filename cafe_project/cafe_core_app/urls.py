@@ -8,5 +8,4 @@ urlpatterns = [
     path('<meal_category>', views.meal_category, name='meal_category'),
     path('<int:meal_id>/meal', views.meal, name='meal'),
     path('meal_statistics', views.meal_statistics, name='meal_statistics'),
-    path('object/<int:pk>/click/', views.object_click, name='object_click'),
 ]
