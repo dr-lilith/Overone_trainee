@@ -4,17 +4,19 @@
 
 {% block content %}
     {% if meal_scores %}
-    <th>Top 3</th>
+    <table border="2">
+        <th>Top 3</th>
         {% for meal_score in meal_scores %}
         <tr>
             <td>
-                <a href="{% url 'cafe_core_app:meal' meal.id %}">{{meal_score.id}}</a>
+                {{meal_score.name}}
             </td>
             <td>
-                {{meal_score.score}}
+                {{meal_score.click_count}}
             </td>
         </tr>
         {% endfor %}
+    </table>
     {% else %}
         No top 3 :(
     {% endif %}

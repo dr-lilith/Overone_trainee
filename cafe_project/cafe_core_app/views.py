@@ -21,9 +21,18 @@ def meal(request, meal_id):
     return render(request, 'cafe_core_app/meal.html', {'meal': meal})
 
 
-def meal_top3(request):
-    meal_scores = MealClick.objects.values('meal_id').annotate(score=Count('meal_id')).order_by('-score')
-    return render(request, 'cafe_core_app/meal_top3.html', {'meal_scores': meal_scores})
+def meal_top(request):
+    #meal_scores = MealClick.objects.values('meal_id').annotate(score=Count('meal_id')).order_by('-score')[:3]
+    meals_scores = Meal.objects.raw("""
+            SELECT meal.id, meal.name, count(mc.id) as click_count
+            FROM cafe_core_app_mealclick mc
+            JOIN cafe_core_app_meal meal on meal_id=meal.id
+            GROUP BY meal.id
+            ORDER BY click_count DESC
+        """)[:3]
+    meals = list(meals_scores)
+    return render(request, 'cafe_core_app/meal_top3.html', {'meal_scores': meals})
+
 
 
 

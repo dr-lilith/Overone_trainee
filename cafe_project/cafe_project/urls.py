@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
+    #path('', include('cafe_core_app.urls')),
     path('cafe_core_app/', include('cafe_core_app.urls')),
     path('admin/', admin.site.urls),
 ]

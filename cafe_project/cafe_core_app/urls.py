@@ -3,9 +3,10 @@ from . import views
 
 app_name = 'cafe_core_app'
 urlpatterns = [
-    path('', views.menu, name='menu'),
+    path('meal_top', views.meal_top, name='top'),
     path('menu', views.menu, name='menu'),
     path('<meal_category>', views.meal_category, name='meal_category'),
     path('<int:meal_id>/meal', views.meal, name='meal'),
-    path('meal_top3', views.meal_top3, name='meal_top3'),
+
+
 ]
