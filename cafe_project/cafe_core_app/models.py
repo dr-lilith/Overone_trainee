@@ -24,6 +24,7 @@ class Meal(models.Model):
 
 
 class MealClick(models.Model):
+    object_id = models.PositiveIntegerField()
     meal = models.ForeignKey(Meal, on_delete=models.DO_NOTHING)
-    click_date = models.DateTimeField('Дата клика')
+    click_date = models.DateTimeField('Дата клика', auto_now_add=True)
 
