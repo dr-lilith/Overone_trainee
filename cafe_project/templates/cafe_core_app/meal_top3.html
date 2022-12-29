@@ -1,0 +1,22 @@
+{% extends 'index.html' %}
+
+{% block title %} Tоп 3 {% endblock %}
+
+{% block content %}
+    {% if meal_scores %}
+    <th>Top 3</th>
+        {% for meal_score in meal_scores %}
+        <tr>
+            <td>
+                <a href="{% url 'cafe_core_app:meal' meal.id %}">{{meal_score.id}}</a>
+            </td>
+            <td>
+                {{meal_score.score}}
+            </td>
+        </tr>
+        {% endfor %}
+    {% else %}
+        No top 3 :(
+    {% endif %}
+
+{% endblock %}

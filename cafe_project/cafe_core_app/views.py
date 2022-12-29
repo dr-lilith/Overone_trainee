@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Meal, MealClick
+from django.db.models import Count
 from django.utils import timezone
 from django.http import HttpResponseRedirect
 
@@ -16,13 +17,14 @@ def meal_category(request, meal_category):
 
 def meal(request, meal_id):
     meal = Meal.objects.get(id=meal_id)
-    meal.mealclick_set.create(click_date=timezone.now())
     MealClick.objects.create(meal=meal)
     return render(request, 'cafe_core_app/meal.html', {'meal': meal})
 
 
-def meal_statistics(request):
-    pass
+def meal_top3(request):
+    meal_scores = MealClick.objects.values('meal_id').annotate(score=Count('meal_id')).order_by('-score')
+    return render(request, 'cafe_core_app/meal_top3.html', {'meal_scores': meal_scores})
+
 
 
 # def menu_list(request, cafe_pk):

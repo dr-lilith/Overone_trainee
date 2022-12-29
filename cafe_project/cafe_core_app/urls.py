@@ -7,5 +7,5 @@ urlpatterns = [
     path('menu', views.menu, name='menu'),
     path('<meal_category>', views.meal_category, name='meal_category'),
     path('<int:meal_id>/meal', views.meal, name='meal'),
-    path('meal_statistics', views.meal_statistics, name='meal_statistics'),
+    path('meal_top3', views.meal_top3, name='meal_top3'),
 ]
