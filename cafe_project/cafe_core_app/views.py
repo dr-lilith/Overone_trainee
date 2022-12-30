@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Meal, MealClick
-from django.db.models import Count
-from django.utils import timezone
 from django.http import HttpResponseRedirect
+from django.db.models import Count
+from django.db.models.functions import Trunc
 
 
 def menu(request):
@@ -19,11 +19,13 @@ def meal(request, meal_id):
     meal = Meal.objects.get(id=meal_id)
     MealClick.objects.create(meal=meal)
     meal_score = MealClick.objects.values('meal_id').annotate(score=Count('meal_id')).filter(meal_id=meal_id)[:1]
-    return render(request, 'cafe_core_app/meal.html', {'meal': meal, 'meal_score': list(meal_score)[0]["score"]})
+    list_of_dicts = list(get_meal_clicks_by_hour(meal_id))
+    timelist_for_chart = [dict['hour'].strftime('%Y-%m-%d %H:%M') for dict in list_of_dicts]
+    clicklist_for_chart = [dict['clicks'] for dict in list_of_dicts]
+    return render(request, 'cafe_core_app/meal.html', {'meal': meal, 'meal_score': list(meal_score)[0]["score"], 'timelist_for_chart': timelist_for_chart, 'clicklist_for_chart': clicklist_for_chart})
 
 
 def meal_top(request):
-    #meal_scores = MealClick.objects.values('meal_id').annotate(score=Count('meal_id')).order_by('-score')[:3]
     meals_scores = Meal.objects.raw("""
             SELECT meal.id, meal.name, count(mc.id) as click_count
             FROM cafe_core_app_mealclick mc
@@ -35,21 +37,9 @@ def meal_top(request):
     return render(request, 'cafe_core_app/meal_top3.html', {'meal_scores': meals})
 
 
-
-
-# def menu_list(request, cafe_pk):
-#     cafe = Cafe.objects.get(pk=cafe_pk)
-#     menu_items = MenuItem.objects.filter(cafe=cafe)
-#     return render(request, 'menu/menu_list.html', {'cafe': cafe, 'menu_items': menu_items})
-#
-# def menu_detail(request, cafe_pk, pk):
-#     menu_item = MenuItem.objects.get(pk=pk)
-#     return render(request, 'menu/menu_detail.html', {'menu_item': menu_item})
-#
-# def cafe_list(request):
-#     cafes = Cafe.objects.all()
-#     return render(request, 'cafes/cafe_list.html', {'cafes': cafes})
-#
-# def cafe_detail(request, pk):
-#     cafe = Cafe.objects.get(pk=pk)
-#     return render(request, 'cafes/cafe_detail.html', {'cafe': cafe})
+def get_meal_clicks_by_hour(meal_id):
+    return (MealClick.objects.filter(meal_id=meal_id)
+            .annotate(hour=Trunc('click_date', 'hour'))
+            .values('hour')
+            .annotate(clicks=Count('click_date'))
+            .order_by('hour'))
