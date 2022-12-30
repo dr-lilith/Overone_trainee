@@ -1,0 +1,24 @@
+{% extends 'index.html' %}
+
+{% block title %} Tоп 10 {% endblock %}
+
+{% block content %}
+    {% if users_scores %}
+    <table border="2">
+        <th>Top 10</th>
+        {% for users_score in users_scores %}
+        <tr>
+            <td>
+                {{users_score.username}}
+            </td>
+            <td>
+                {{users_score.click_count}}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        No top 10 :(
+    {% endif %}
+
+{% endblock %}

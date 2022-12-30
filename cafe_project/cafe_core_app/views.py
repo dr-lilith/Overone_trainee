@@ -3,6 +3,7 @@ from .models import Meal, MealClick
 from django.http import HttpResponseRedirect
 from django.db.models import Count
 from django.db.models.functions import Trunc
+from users.models import User
 
 
 def menu(request):
@@ -35,6 +36,30 @@ def meal_top(request):
         """)[:3]
     meals = list(meals_scores)
     return render(request, 'cafe_core_app/meal_top3.html', {'meal_scores': meals})
+
+
+def users_top(request):
+    users_scores = User.objects.raw("""
+            SELECT u.id, u.username, count(*) as click_count
+            FROM cafe_core_app_mealclick mc
+            JOIN users_user u on mc.user_id=u.id
+            GROUP BY u.id
+            ORDER BY click_count DESC
+        """)[:10]
+    users = list(users_scores)
+    return render(request, 'cafe_core_app/users_top10.html', {'users_scores': users})
+
+
+def users_categories_top(request):
+    users_scores = User.objects.raw("""
+            SELECT u.id, u.username, count(*) as click_count
+            FROM cafe_core_app_mealclick mc
+            JOIN users_user u on mc.user_id=u.id
+            GROUP BY u.id
+            ORDER BY click_count DESC
+        """)[:10]
+    users = list(users_scores)
+    return render(request, 'cafe_core_app/users_top_by_categories.html', {'users_scores': users})
 
 
 def get_meal_clicks_by_hour(meal_id):

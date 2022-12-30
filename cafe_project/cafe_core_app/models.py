@@ -1,4 +1,5 @@
 from django.db import models
+from users.models import User
 
 
 class Meal(models.Model):
@@ -26,4 +27,5 @@ class Meal(models.Model):
 class MealClick(models.Model):
     meal = models.ForeignKey(Meal, on_delete=models.DO_NOTHING)
     click_date = models.DateTimeField('Дата клика', auto_now_add=True)
-
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True,
+        blank=True)
